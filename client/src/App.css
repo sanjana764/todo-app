@@ -1,0 +1,240 @@
+body, html, #root {
+  height: 100%;
+  margin: 0;
+  font-family: 'Segoe UI', 'Arial', sans-serif;
+  background: #18181b;
+}
+
+.app-bg {
+  min-height: 100vh;
+  background: #18181b;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.header-gradient {
+  width: 80%;
+  margin: 32px auto 16px auto;
+  padding: 24px 0;
+  border-radius: 20px;
+  background: linear-gradient(90deg, #e040fb 0%, #7f7fff 100%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #fff;
+  box-shadow: 0 4px 24px #0002;
+}
+
+.header-title {
+  flex: 1;
+  text-align: center;
+}
+
+.sparkle {
+  font-size: 2rem;
+  margin: 0 12px;
+}
+
+.counters {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 16px;
+}
+
+.counter {
+  background: #23232b;
+  padding: 8px 24px;
+  border-radius: 20px;
+  font-size: 1.1rem;
+  box-shadow: 0 2px 8px #0002;
+}
+
+.todo-box {
+  background: #23232b;
+  padding: 24px;
+  border-radius: 16px;
+  margin-bottom: 24px;
+  width: 80%;
+  max-width: 700px;
+  box-shadow: 0 2px 16px #0003;
+}
+
+.todo-input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  margin-bottom: 16px;
+  font-size: 1.1rem;
+  background: #18181b;
+  color: #fff;
+}
+
+.priority-row, .filter-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.priority-btn, .filter-btn {
+  border: none;
+  border-radius: 8px;
+  padding: 8px 18px;
+  font-size: 1rem;
+  cursor: pointer;
+  background: #23232b;
+  color: #fff;
+  transition: background 0.2s, color 0.2s;
+}
+
+.priority-btn.low-active { background: #4caf50; color: #fff; }
+.priority-btn.medium-active { background: #ffd600; color: #23232b; }
+.priority-btn.high-active { background: #7f7fff; color: #fff; }
+
+.add-btn {
+  background: linear-gradient(90deg, #e040fb 0%, #7f7fff 100%);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 24px;
+  font-size: 1.1rem;
+  margin-left: auto;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.add-btn:hover {
+  background: linear-gradient(90deg, #7f7fff 0%, #e040fb 100%);
+}
+
+.filter-btn.filter-active {
+  background: #7f7fff;
+  color: #fff;
+}
+
+.todo-list {
+  list-style: none;
+  padding: 0;
+  width: 80%;
+  max-width: 700px;
+  margin: 0 auto 24px auto;
+}
+
+.todo-item {
+  background: #23232b;
+  margin-bottom: 12px;
+  padding: 16px 20px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 1.1rem;
+  box-shadow: 0 2px 8px #0002;
+  transition: background 0.2s;
+}
+
+.todo-item.completed {
+  opacity: 0.6;
+  text-decoration: line-through;
+}
+
+.todo-text {
+  flex: 1;
+  cursor: pointer;
+}
+
+.priority-label {
+  margin: 0 16px;
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.priority-label.low { background: #4caf50; color: #fff; }
+.priority-label.medium { background: #ffd600; color: #23232b; }
+.priority-label.high { background: #7f7fff; color: #fff; }
+
+.delete-btn {
+  background: none;
+  border: none;
+  color: #e040fb;
+  font-size: 1.2rem;
+  cursor: pointer;
+  margin-left: 8px;
+}
+
+.progress-section {
+  width: 80%;
+  max-width: 700px;
+  margin: 32px auto 0 auto;
+  text-align: center;
+}
+
+.progress-text {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 0 8px;
+}
+
+.progress-bar-bg {
+  width: 100%;
+  height: 10px;
+  background: #23232b;
+  border-radius: 8px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #e040fb 0%, #7f7fff 100%);
+  transition: width 0.4s;
+}
+@media (max-width: 600px) {
+  .header-gradient,
+  .todo-box,
+  .todo-list,
+  .progress-section {
+    width: 98%;
+    max-width: 100%;
+    padding: 8px;
+    margin: 8px auto;
+  }
+
+  .header-gradient {
+    font-size: 1.1rem;
+    padding: 12px 0;
+    border-radius: 12px;
+  }
+
+  .todo-box {
+    padding: 12px;
+    border-radius: 10px;
+  }
+
+  .todo-item {
+    padding: 10px 8px;
+    font-size: 1rem;
+    border-radius: 8px;
+  }
+
+  .priority-row, .filter-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .add-btn {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 8px;
+    padding: 10px 0;
+  }
+}
