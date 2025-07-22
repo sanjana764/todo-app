@@ -30,28 +30,41 @@ function Auth({ setToken }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ margin: 32 }}>
-      <h2>{isLogin ? "Login" : "Register"}</h2>
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        required
-        onChange={e => setEmail(e.target.value)}
-      /><br/>
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        required
-        onChange={e => setPassword(e.target.value)}
-      /><br/>
-      <button type="submit">{isLogin ? "Login" : "Register"}</button>
-      <br/>
-      <span style={{ cursor: "pointer", color: "#7f7fff" }} onClick={() => setIsLogin(!isLogin)}>
-        {isLogin ? "No account? Register" : "Have an account? Login"}
-      </span>
-    </form>
+    <div className="auth-bg">
+      <form className="auth-form" onSubmit={handleSubmit}>
+        <h2>{isLogin ? "Login" : "Register"}</h2>
+        <input
+          className="auth-input"
+          type="email"
+          placeholder="Email"
+          value={email}
+          required
+          onChange={e => setEmail(e.target.value)}
+        />
+        <input
+          className="auth-input"
+          type="password"
+          placeholder="Password"
+          value={password}
+          required
+          onChange={e => setPassword(e.target.value)}
+        />
+        <button className="auth-btn" type="submit">
+          {isLogin ? "Login" : "Register"}
+        </button>
+        <div className="auth-toggle">
+          <span>
+            {isLogin ? "No account?" : "Have an account?"}
+          </span>
+          <span
+            className="auth-link"
+            onClick={() => setIsLogin(!isLogin)}
+          >
+            {isLogin ? " Register" : " Login"}
+          </span>
+        </div>
+      </form>
+    </div>
   );
 }
 
