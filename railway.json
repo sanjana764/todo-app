@@ -1,5 +1,0 @@
-{
-  "build": {
-    "dockerComposeFile": "docker-compose.yml"
-  }
-}
