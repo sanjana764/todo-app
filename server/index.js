@@ -7,7 +7,11 @@ const User = require('./User');
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret'; // Set this in Render env vars!
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: 'https://todo-frontend-zd6t.onrender.com',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
+}));
 app.use(express.json());
 
 // Connect to MongoDB (the host will be 'mongo' when using Docker)
