@@ -338,3 +338,26 @@ body, html, #root {
     padding: 10px 0;
   }
 }
+
+.main-title-banner {
+  width: 100vw;
+  text-align: center;
+  font-size: 2.1rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+  margin-top: 32px;
+  margin-bottom: 0;
+  color: #fff;
+  background: linear-gradient(90deg, #e040fb 0%, #7f7fff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.main-title-sub {
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: #ffd600;
+  background: none;
+  -webkit-text-fill-color: initial;
+}

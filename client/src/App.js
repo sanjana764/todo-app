@@ -30,46 +30,51 @@ function Auth({ setToken }) {
   };
 
   return (
-    <div className="auth-bg">
-      <div className="header-gradient" style={{ marginBottom: 32, width: "100%", maxWidth: 400 }}>
-        <span className="sparkle">✨</span>
-        <span className="header-title">TaskMate - Transform your productivity with style</span>
-        <span className="sparkle">✨</span>
+    <>
+      <div className="main-title-banner">
+        TaskMate <span className="main-title-sub">- A Smart To-Do App</span>
       </div>
-      <form className="auth-form" onSubmit={handleSubmit}>
-        <h2>{isLogin ? "Login" : "Register"}</h2>
-        <input
-          className="auth-input"
-          type="email"
-          placeholder="Email"
-          value={email}
-          required
-          onChange={e => setEmail(e.target.value)}
-        />
-        <input
-          className="auth-input"
-          type="password"
-          placeholder="Password"
-          value={password}
-          required
-          onChange={e => setPassword(e.target.value)}
-        />
-        <button className="auth-btn" type="submit">
-          {isLogin ? "Login" : "Register"}
-        </button>
-        <div className="auth-toggle">
-          <span>
-            {isLogin ? "No account?" : "Have an account?"}
-          </span>
-          <span
-            className="auth-link"
-            onClick={() => setIsLogin(!isLogin)}
-          >
-            {isLogin ? " Register" : " Login"}
-          </span>
+      <div className="auth-bg">
+        <div className="header-gradient" style={{ marginBottom: 32, width: "100%", maxWidth: 400 }}>
+          <span className="sparkle">✨</span>
+          <span className="header-title">Transform your productivity with style</span>
+          <span className="sparkle">✨</span>
         </div>
-      </form>
-    </div>
+        <form className="auth-form" onSubmit={handleSubmit}>
+          <h2>{isLogin ? "Login" : "Register"}</h2>
+          <input
+            className="auth-input"
+            type="email"
+            placeholder="Email"
+            value={email}
+            required
+            onChange={e => setEmail(e.target.value)}
+          />
+          <input
+            className="auth-input"
+            type="password"
+            placeholder="Password"
+            value={password}
+            required
+            onChange={e => setPassword(e.target.value)}
+          />
+          <button className="auth-btn" type="submit">
+            {isLogin ? "Login" : "Register"}
+          </button>
+          <div className="auth-toggle">
+            <span>
+              {isLogin ? "No account?" : "Have an account?"}
+            </span>
+            <span
+              className="auth-link"
+              onClick={() => setIsLogin(!isLogin)}
+            >
+              {isLogin ? " Register" : " Login"}
+            </span>
+          </div>
+        </form>
+      </div>
+    </>
   );
 }
 
