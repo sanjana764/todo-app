@@ -1,25 +1,100 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./App.css";
 
 const API_URL = process.env.REACT_APP_API_URL;
+
+function Auth({ setToken }) {
+  const [isLogin, setIsLogin] = useState(true);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const API_BASE = process.env.REACT_APP_API_URL.replace("/todos", "");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const endpoint = isLogin ? "/login" : "/register";
+    const res = await fetch(API_BASE + endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
+    const data = await res.json();
+    if (isLogin && data.token) {
+      setToken(data.token);
+      localStorage.setItem("token", data.token);
+    } else if (!isLogin && data.message) {
+      alert("Registration successful! Please log in.");
+      setIsLogin(true);
+    } else if (data.error) {
+      alert(data.error);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} style={{ margin: 32 }}>
+      <h2>{isLogin ? "Login" : "Register"}</h2>
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        required
+        onChange={e => setEmail(e.target.value)}
+      /><br/>
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        required
+        onChange={e => setPassword(e.target.value)}
+      /><br/>
+      <button type="submit">{isLogin ? "Login" : "Register"}</button>
+      <br/>
+      <span style={{ cursor: "pointer", color: "#7f7fff" }} onClick={() => setIsLogin(!isLogin)}>
+        {isLogin ? "No account? Register" : "Have an account? Login"}
+      </span>
+    </form>
+  );
+}
 
 function App() {
   const [todos, setTodos] = useState([]);
   const [text, setText] = useState("");
   const [priority, setPriority] = useState("Medium");
   const [filter, setFilter] = useState("All");
+  const [token, setToken] = useState(localStorage.getItem("token") || "");
 
-  useEffect(() => {
-    fetch(API_URL)
-      .then((res) => res.json())
-      .then(setTodos);
-  }, []);
+  if (!token) {
+    return <Auth setToken={setToken} />;
+  }
+
+  const fetchTodos = async () => {
+    const res = await fetch(API_URL, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token
+      }
+    });
+    if (res.status === 401) {
+      setToken("");
+      localStorage.removeItem("token");
+      return;
+    }
+    const data = await res.json();
+    setTodos(data);
+  };
+
+  useState(() => {
+    fetchTodos();
+  }, [token]); // Re-fetch when token changes
 
   const addTodo = async () => {
     if (!text) return;
     const res = await fetch(API_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token
+      },
       body: JSON.stringify({ text, priority }),
     });
     const newTodo = await res.json();
@@ -32,7 +107,10 @@ function App() {
     const todo = todos.find((t) => t._id === id);
     const res = await fetch(`${API_URL}/${id}`, {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token
+      },
       body: JSON.stringify({ ...todo, completed: !completed }),
     });
     const updated = await res.json();
@@ -40,7 +118,7 @@ function App() {
   };
 
   const deleteTodo = async (id) => {
-    await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+    await fetch(`${API_URL}/${id}`, { method: "DELETE", headers: { "Authorization": "Bearer " + token } });
     setTodos(todos.filter((t) => t._id !== id));
   };
 
@@ -138,6 +216,15 @@ function App() {
           <div className="progress-bar" style={{ width: `${progress}%` }} />
         </div>
       </div>
+      <button
+        style={{ margin: "16px", background: "#e040fb", color: "#fff", border: "none", borderRadius: "8px", padding: "8px 16px", cursor: "pointer" }}
+        onClick={() => {
+          setToken("");
+          localStorage.removeItem("token");
+        }}
+      >
+        Logout
+      </button>
     </div>
   );
 }

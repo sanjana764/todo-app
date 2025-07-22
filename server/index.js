@@ -1,6 +1,10 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const User = require('./User');
+const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret'; // Set this in Render env vars!
 
 const app = express();
 app.use(cors());
@@ -17,6 +21,7 @@ const TodoSchema = new mongoose.Schema({
   text: String,
   priority: String,
   completed: Boolean,
+  userId: String, // Add this field
 });
 const Todo = mongoose.model('Todo', TodoSchema);
 
@@ -29,37 +34,74 @@ app.get('/api/test', (req, res) => {
   res.json({ message: 'CORS is working!' });
 });
 
-// Get all todos
-app.get('/api/todos', async (req, res) => {
-    const todos = await Todo.find();
-    res.json(todos);
-  });
-  
-  // Add a new todo
-  app.post('/api/todos', async (req, res) => {
-    const { text, priority } = req.body;
-    const todo = new Todo({ text, priority, completed: false });
-    await todo.save();
-    res.status(201).json(todo);
-  });
-  
-  // Update a todo (mark as completed or edit)
-  app.put('/api/todos/:id', async (req, res) => {
-    const { id } = req.params;
-    const { text, priority, completed } = req.body;
-    const todo = await Todo.findByIdAndUpdate(
-      id,
-      { text, priority, completed },
-      { new: true }
-    );
-    res.json(todo);
-  });
-  
-  // Delete a todo
-  app.delete('/api/todos/:id', async (req, res) => {
-    const { id } = req.params;
-    await Todo.findByIdAndDelete(id);
-    res.json({ message: 'Todo deleted' });
-  });
+// Register
+app.post('/api/register', async (req, res) => {
+  const { email, password } = req.body;
+  const hashed = await bcrypt.hash(password, 10);
+  try {
+    const user = await User.create({ email, password: hashed });
+    res.json({ message: 'User created' });
+  } catch (err) {
+    res.status(400).json({ error: 'Email already exists' });
+  }
+});
+
+// Login
+app.post('/api/login', async (req, res) => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
+  if (!user) return res.status(400).json({ error: 'Invalid credentials' });
+  const valid = await bcrypt.compare(password, user.password);
+  if (!valid) return res.status(400).json({ error: 'Invalid credentials' });
+  const token = jwt.sign({ userId: user._id }, JWT_SECRET, { expiresIn: '7d' });
+  res.json({ token });
+});
+
+// Auth middleware
+function auth(req, res, next) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) return res.status(401).json({ error: 'No token' });
+  const token = authHeader.split(' ')[1];
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    req.userId = decoded.userId;
+    next();
+  } catch {
+    res.status(401).json({ error: 'Invalid token' });
+  }
+}
+
+// Get all todos for logged-in user
+app.get('/api/todos', auth, async (req, res) => {
+  const todos = await Todo.find({ userId: req.userId });
+  res.json(todos);
+});
+
+// Add a new todo for logged-in user
+app.post('/api/todos', auth, async (req, res) => {
+  const { text, priority } = req.body;
+  const todo = new Todo({ text, priority, completed: false, userId: req.userId });
+  await todo.save();
+  res.status(201).json(todo);
+});
+
+// Update a todo (only if it belongs to the user)
+app.put('/api/todos/:id', auth, async (req, res) => {
+  const { id } = req.params;
+  const { text, priority, completed } = req.body;
+  const todo = await Todo.findOneAndUpdate(
+    { _id: id, userId: req.userId },
+    { text, priority, completed },
+    { new: true }
+  );
+  res.json(todo);
+});
+
+// Delete a todo (only if it belongs to the user)
+app.delete('/api/todos/:id', auth, async (req, res) => {
+  const { id } = req.params;
+  await Todo.findOneAndDelete({ _id: id, userId: req.userId });
+  res.json({ message: 'Todo deleted' });
+});
 
 app.listen(5000, () => console.log('Server running on port 5000'));
