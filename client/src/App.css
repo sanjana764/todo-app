@@ -320,3 +320,21 @@ body, html, #root {
 .auth-link:hover {
   color: #e040fb;
 }
+
+@media (max-width: 600px) {
+  .auth-form {
+    min-width: 90vw;
+    padding: 24px 8px 16px 8px;
+  }
+  .auth-form h2 {
+    font-size: 1.3rem;
+  }
+  .auth-input {
+    font-size: 1rem;
+    padding: 10px;
+  }
+  .auth-btn {
+    font-size: 1rem;
+    padding: 10px 0;
+  }
+}
