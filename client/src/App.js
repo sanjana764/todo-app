@@ -35,11 +35,6 @@ function Auth({ setToken }) {
         TaskMate <span className="main-title-sub">- A Smart To-Do App</span>
       </div>
       <div className="auth-bg">
-        <div className="header-gradient" style={{ marginBottom: 32, width: "100%", maxWidth: 400 }}>
-          <span className="sparkle">✨</span>
-          <span className="header-title">Transform your productivity with style</span>
-          <span className="sparkle">✨</span>
-        </div>
         <form className="auth-form" onSubmit={handleSubmit}>
           <h2>{isLogin ? "Login" : "Register"}</h2>
           <input
