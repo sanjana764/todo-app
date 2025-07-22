@@ -7,10 +7,10 @@ app.use(cors());
 app.use(express.json());
 
 // Connect to MongoDB (the host will be 'mongo' when using Docker)
-mongoose.connect('mongodb://mongo:27017/todos', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
 
 // Define a simple Todo schema
 const TodoSchema = new mongoose.Schema({
