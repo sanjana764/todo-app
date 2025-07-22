@@ -24,7 +24,10 @@ const Todo = mongoose.model('Todo', TodoSchema);
 app.get('/', (req, res) => {
   res.send('Todo API is running!');
 });
-// ... existing code ...
+
+app.get('/api/test', (req, res) => {
+  res.json({ message: 'CORS is working!' });
+});
 
 // Get all todos
 app.get('/api/todos', async (req, res) => {
