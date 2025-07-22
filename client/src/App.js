@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 
 const API_URL = process.env.REACT_APP_API_URL;
@@ -62,11 +62,15 @@ function App() {
   const [filter, setFilter] = useState("All");
   const [token, setToken] = useState(localStorage.getItem("token") || "");
 
-  if (!token) {
-    return <Auth setToken={setToken} />;
-  }
+  // Always call hooks before any return!
+  useEffect(() => {
+    if (token) {
+      fetchTodos();
+    }
+    // eslint-disable-next-line
+  }, [token]);
 
-  const fetchTodos = async () => {
+  async function fetchTodos() {
     const res = await fetch(API_URL, {
       method: "GET",
       headers: {
@@ -81,11 +85,11 @@ function App() {
     }
     const data = await res.json();
     setTodos(data);
-  };
+  }
 
-  useState(() => {
-    fetchTodos();
-  }, [token]); // Re-fetch when token changes
+  if (!token) {
+    return <Auth setToken={setToken} />;
+  }
 
   const addTodo = async () => {
     if (!text) return;
